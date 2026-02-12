@@ -1,5 +1,8 @@
 import numpy as np
-import openjij as oj
+import matplotlib.pyplot as plt
+import os
+import json
+import datetime
 from mnist_ml import MNistML
 from surrogate_model import BOCSSurrogateModel
 from acquisition_function import AcquisitionFunction
@@ -10,10 +13,9 @@ def save_optimizing_data():
 def show_figure(data, title):
     pass
 
-
 if __name__ == "__main__":
     # set up
-    D = 1
+    D = 4
     iter_init = 5
     iter_max = 20
     ml_model = MNistML()
@@ -21,40 +23,41 @@ if __name__ == "__main__":
     acq_func = AcquisitionFunction()
 
     # init dataset
-    X = np.random.rand(iter_init, D)
-    y = ml_model.predict(X)
+    X = np.random.randint(0, 2, size=(iter_init, D), dtype=np.int8)
+    Y = ml_model.fit(X)
 
     print(X)
-    print(y)
+    print(Y)
 
     # init surrogate model
-    bbo_model.fit(X, y)
+    bbo_model.init_fit(X, Y)
 
     # init acquisition function
     bbo_params = bbo_model.params
     acq_func.build(bbo_params)
-    next_x = acq_func.optimize()
+    x_new = acq_func.optimize()
 
     # update dataset
-    X = np.vstack((X, next_x))
-    y_new = ml_model.predict(next_x)
-    y = np.hstack((y, y_new))
+    X = np.vstack((X, x_new))
+    y_new = ml_model.fit(x_new)
+    Y = np.hstack((Y, y_new))
 
     # iterate BOCS
     for iter in range(iter_max):
         # update surrogate model
-        bbo_model.fit(X, y)
+        bbo_model.fit(X, Y)
 
         # update acquisition function
         bbo_params = bbo_model.params
         acq_func.build(bbo_params)
-        next_x = acq_func.optimize()
+        x_new = acq_func.optimize()
 
         # update dataset
-        X = np.vstack((X, next_x))
-        y_new = ml_model.predict(next_x)
-        y = np.hstack((y, y_new))
+        X = np.vstack((X, x_new))
+        y_new = ml_model.fit(x_new)
+        Y = np.hstack((Y, y_new))
 
+        # save data from the optimization process
         save_optimizing_data()
 
     # output results
