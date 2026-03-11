@@ -13,8 +13,17 @@ class HorseshoeDistribution:
         self.sigma2 = 1.0
         self.tau2 = 1.0
         self.xi = 1.0
+        self.params = {'alpha': self.alpha, 'beta': self.beta,
+                       'nu': self.nu, 'sigma2': self.sigma2,
+                       'tau2': self.tau2, 'xi': self.xi}
 
-    
+    def markov_transition(self):
+        """
+        Perform a single Markov transition for the horseshoe distribution.
+        Returns:
+            None
+        """
+        
 
     def init_fit(self, X, Y):
         """
@@ -23,7 +32,7 @@ class HorseshoeDistribution:
             X (numpy.ndarray): Input data of shape (N, D)
             Y (numpy.ndarray): Output data of shape (N,)
         Returns:
-            None
+            self.params (dict): Parameters of the fitted horseshoe distribution
         """
         pass
 

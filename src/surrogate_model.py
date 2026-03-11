@@ -26,6 +26,7 @@ class BOCSSurrogateModel:
         """
         p = calc_p_from_d(D)
         self.linear_regression_model = HorseshoeDistribution(p)
+        self.params = dict()
 
     def init_fit(self, X, Y):
         """
@@ -34,9 +35,10 @@ class BOCSSurrogateModel:
             X (numpy.ndarray): Input data of shape (N, D)
             Y (numpy.ndarray): Output data of shape (N,)
         Returns:
-            None
+            self.params (dict): Parameters of the fitted surrogate model
         """
-        self.linear_regression_model.init_fit(X, Y)
+        self.params = self.linear_regression_model.init_fit(X, Y)
+        return self.params
         
     def fit(self, X, Y):
         """
@@ -45,7 +47,8 @@ class BOCSSurrogateModel:
             X (numpy.ndarray): Input data of shape (N, D)
             Y (numpy.ndarray): Output data of shape (N,)
         Returns:
-            None
+            self.params (dict): Parameters of the updated surrogate model
         """
 
-        self.linear_regression_model.fit(X, Y)
+        self.params = self.linear_regression_model.fit(X, Y)
+        return self.params

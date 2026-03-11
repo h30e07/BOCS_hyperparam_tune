@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     # init acquisition function
     bbo_params = bbo_model.params
-    acq_func.build(bbo_params)
+    acq_func.build(bbo_params['alpha'])
     x_new = acq_func.optimize()
 
     # update dataset
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
         # update acquisition function
         bbo_params = bbo_model.params
-        acq_func.build(bbo_params)
+        acq_func.build(bbo_params['alpha'])
         x_new = acq_func.optimize()
 
         # update dataset
